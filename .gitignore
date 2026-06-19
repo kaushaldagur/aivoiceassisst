@@ -1,0 +1,10 @@
+.DS_Store
+.env
+.venv/
+.venv312/
+node_modules/
+dist/
+__pycache__/
+*.pyc
+backend/app/storage/audio/*.mp3
+backend/app/storage/*.corrupt

@@ -1,0 +1,8 @@
+{
+  "theme": "light",
+  "language": "English",
+  "voiceSpeed": 1.0,
+  "voiceVolume": 1.0,
+  "wakeWordEnabled": true,
+  "currentMode": "general"
+}

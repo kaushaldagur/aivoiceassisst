@@ -1,0 +1,35 @@
+{
+  "name": "nova-ai-voice-assistant",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "vite": "latest",
+    "typescript": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-router-dom": "latest",
+    "framer-motion": "latest",
+    "lucide-react": "latest",
+    "clsx": "latest",
+    "tailwind-merge": "latest",
+    "react-markdown": "latest",
+    "remark-gfm": "latest"
+  },
+  "devDependencies": {
+    "tailwindcss": "3.4.17",
+    "postcss": "latest",
+    "autoprefixer": "latest",
+    "eslint": "latest",
+    "typescript-eslint": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest"
+  }
+}
