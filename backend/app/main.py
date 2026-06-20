@@ -11,9 +11,20 @@ app_settings = get_settings()
 
 app = FastAPI(title="Nova AI Voice Assistant API", version="1.0.0")
 
+allowed_origins = [
+    origin.strip()
+    for origin in [
+        app_settings.frontend_origin,
+        *app_settings.frontend_origins.split(","),
+        "http://127.0.0.1:5173",
+        "http://localhost:5173",
+    ]
+    if origin.strip()
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[app_settings.frontend_origin, "http://127.0.0.1:5173", "http://localhost:5173"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
