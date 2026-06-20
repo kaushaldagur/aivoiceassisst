@@ -2,7 +2,7 @@ services:
   - type: web
     name: nova-ai-backend
     env: docker
-    dockerContext: ./backend
+    dockerContext: .
     dockerfilePath: ./backend/Dockerfile
     plan: free
     envVars:
