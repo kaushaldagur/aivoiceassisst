@@ -60,3 +60,14 @@ app.include_router(tts.router, prefix="/api")
 app.include_router(speech.router, prefix="/api")
 app.include_router(pdf.router, prefix="/api")
 app.include_router(interview.router, prefix="/api")
+
+# Backward-compatible route aliases for deployments configured with
+# VITE_API_URL=https://backend-domain instead of https://backend-domain/api.
+app.include_router(health.router)
+app.include_router(modes.router)
+app.include_router(settings.router)
+app.include_router(chat.router)
+app.include_router(tts.router)
+app.include_router(speech.router)
+app.include_router(pdf.router)
+app.include_router(interview.router)

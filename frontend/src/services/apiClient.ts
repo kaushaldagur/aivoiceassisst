@@ -1,4 +1,13 @@
-const API_BASE = import.meta.env.VITE_API_URL ?? import.meta.env.VITE_API_BASE_URL ?? "/api";
+function normalizeApiBase(value?: string) {
+  const raw = value?.trim() || "/api";
+  const withoutTrailingSlash = raw.replace(/\/+$/, "");
+  if (withoutTrailingSlash === "") return "/api";
+  if (withoutTrailingSlash === "/api" || withoutTrailingSlash.endsWith("/api")) return withoutTrailingSlash;
+  if (/^https?:\/\//.test(withoutTrailingSlash)) return `${withoutTrailingSlash}/api`;
+  return withoutTrailingSlash;
+}
+
+const API_BASE = normalizeApiBase(import.meta.env.VITE_API_URL ?? import.meta.env.VITE_API_BASE_URL);
 
 export async function apiRequest<T>(path: string, options: RequestInit = {}): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`, {
