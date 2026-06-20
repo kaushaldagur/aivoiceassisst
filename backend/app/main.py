@@ -25,10 +25,16 @@ allowed_origins = [
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
+    allow_origin_regex=app_settings.frontend_origin_regex or None,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.get("/")
+async def root() -> dict:
+    return {"status": "ok", "service": "Nova AI Voice Assistant API", "health": "/api/health"}
 
 
 @app.on_event("startup")

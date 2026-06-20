@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     app_port: int = 8000
     frontend_origin: str = "http://localhost:5173"
     frontend_origins: str = ""
+    frontend_origin_regex: str = r"https://.*\.vercel\.app"
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
