@@ -1,45 +1,16 @@
-# Frontend
-frontend/
+.git
+.github
+.venv
+.venv312
+__pycache__
+*.pyc
 
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-*.egg-info/
-dist/
-build/
+frontend/node_modules
+frontend/dist
+frontend/.vercel
 
-# Virtual environments
-.venv/
-.venv312/
-env/
-venv/
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Environment
-.env
-.env.local
-
-# Storage
-storage/
-*.db
-*.sqlite
-
-# Git
-.git/
-.gitignore
-
-# Documentation
-README.md
-*.md
+backend/app/storage/audio/*.mp3
+backend/app/storage/audio/*.wav
+backend/app/storage/audio/*.webm
+backend/app/storage/*.txt
+backend/app/storage/*.json
