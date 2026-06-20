@@ -36,6 +36,7 @@ export function AssistantProvider({ children }: { children: React.ReactNode }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [error, setError] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const sendInFlightRef = useRef(false);
 
   function stopAudio() {
     if (audioRef.current) {
@@ -73,7 +74,8 @@ export function AssistantProvider({ children }: { children: React.ReactNode }) {
 
   async function sendMessage(message: string) {
     const clean = message.trim();
-    if (!clean) return;
+    if (!clean || sendInFlightRef.current) return;
+    sendInFlightRef.current = true;
     setError(null);
     setStatus("Processing");
 
@@ -92,6 +94,8 @@ export function AssistantProvider({ children }: { children: React.ReactNode }) {
       setMessages((current) => current.filter((item) => item.id !== pendingUser.id));
       setError(err instanceof Error ? err.message : "Could not send message.");
       setStatus("Idle");
+    } finally {
+      sendInFlightRef.current = false;
     }
   }
 

@@ -1,4 +1,4 @@
-import { Send, Square, Volume2 } from "lucide-react";
+import { Send, Volume2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { useAssistant } from "../../contexts/AssistantContext";
@@ -17,13 +17,13 @@ interface ChatComposerProps {
 export function ChatComposer({ autoStart = false, className }: ChatComposerProps) {
   const [text, setText] = useState("");
   const autoStartedRef = useRef(false);
-  const { sendMessage, setStatus, status, stopAudio } = useAssistant();
+  const { sendMessage, setStatus, status } = useAssistant();
   const { settings } = useSettings();
   const busy = status === "Processing" || status === "Generating Response" || status === "Speaking";
 
   const recorder = useSpeechRecorder(
     (transcript) => {
-      setText(transcript);
+      setText("");
       void sendMessage(transcript);
     },
     (state) => setStatus(state === "start" ? "Listening" : state === "processing" ? "Processing" : "Idle"),
@@ -75,12 +75,6 @@ export function ChatComposer({ autoStart = false, className }: ChatComposerProps
       <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap gap-2">
           <MicrophoneButton recording={recorder.recording} disabled={busy && !recorder.recording} onClick={recorder.toggle} />
-          {status === "Speaking" && (
-            <Button onClick={stopAudio} className="border-red-400/30 bg-red-500/10 text-red-100">
-              <Square size={16} />
-              Stop
-            </Button>
-          )}
         </div>
         <Button disabled={busy || !text.trim()} onClick={() => void submit()} className="bg-cyan-500/20 text-cyan-50 hover:bg-cyan-500/30">
           <Send size={18} />

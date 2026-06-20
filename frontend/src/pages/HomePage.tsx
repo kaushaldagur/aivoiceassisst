@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { FileText, History, MessageSquare, UserRoundCheck } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { VoiceOrb } from "../components/assistant/VoiceOrb";
 import { ModeCard } from "../components/modes/ModeCard";
@@ -9,25 +9,17 @@ import { ConnectionBanner } from "../components/assistant/ConnectionBanner";
 import { MicrophoneButton } from "../components/assistant/MicrophoneButton";
 import { useAssistant } from "../contexts/AssistantContext";
 import { useSettings } from "../contexts/SettingsContext";
-import { useWakeWord } from "../hooks/useWakeWord";
 import { getChatHistory } from "../services/chatApi";
 import { getIntegrationStatus, type GeminiStatus } from "../services/healthApi";
 
 export function HomePage() {
   const navigate = useNavigate();
-  const { status, setStatus, messages, setMessages } = useAssistant();
+  const { status, messages, setMessages } = useAssistant();
   const { settings, modes, update, error: backendError } = useSettings();
   const [gemini, setGemini] = useState<GeminiStatus | null>(null);
 
   const currentMode = useMemo(() => modes.find((mode) => mode.id === settings.currentMode), [modes, settings.currentMode]);
   const recentMessages = useMemo(() => messages.slice(-2).reverse(), [messages]);
-
-  const handleWake = useCallback(() => {
-    setStatus("Listening");
-    navigate("/chat", { state: { startListening: true, wakeGreeting: true } });
-  }, [navigate, setStatus]);
-
-  useWakeWord(settings.wakeWordEnabled && status === "Idle", settings.language, handleWake);
 
   useEffect(() => {
     getIntegrationStatus().then((response) => setGemini(response.gemini)).catch(() => undefined);
@@ -49,11 +41,6 @@ export function HomePage() {
               <p className="muted mt-3 max-w-xl text-base leading-7">
                 Tap the microphone to talk, or open Chat to type. Nova responds in {settings.language}.
               </p>
-              {settings.wakeWordEnabled && (
-                <p className="mt-4 rounded-xl border border-cyan-500/20 bg-cyan-500/10 px-4 py-3 text-sm text-cyan-100">
-                  Say <span className="font-medium">“Hey Nova”</span> to start listening.
-                </p>
-              )}
               <div className="mt-6 flex flex-wrap gap-3">
                 <MicrophoneButton
                   large

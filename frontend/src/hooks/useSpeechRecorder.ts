@@ -65,6 +65,8 @@ export function useSpeechRecorder(
       return;
     }
     updateInterim(clean);
+    isRecordingRef.current = false;
+    setRecording(false);
     onText(clean);
   }
 
@@ -202,7 +204,7 @@ export function useSpeechRecorder(
   function stop() {
     permissionRequestRef.current += 1;
     isRecordingRef.current = false;
-    const browserText = `${finalTextRef.current} ${interimTextRef.current}`.trim();
+    const browserText = (finalTextRef.current || interimTextRef.current).trim();
 
     if (recognitionRef.current) {
       const recognition = recognitionRef.current;

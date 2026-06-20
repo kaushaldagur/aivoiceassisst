@@ -1,48 +1,24 @@
-import { CheckCircle2, KeyRound, RotateCcw, Trash2 } from "lucide-react";
+import { CheckCircle2, RotateCcw, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
-import { Input } from "../components/ui/Input";
 import { clearChatHistory } from "../services/chatApi";
 import { clearInterviewReports } from "../services/interviewApi";
 import { getIntegrationStatus, type GeminiStatus } from "../services/healthApi";
-import { resetApplication, saveGeminiKey } from "../services/settingsApi";
+import { resetApplication } from "../services/settingsApi";
 import { useSettings } from "../contexts/SettingsContext";
 
 export function SettingsPage() {
   const { settings, languages, storage, update, refresh } = useSettings();
   const [message, setMessage] = useState<string | null>(null);
   const [gemini, setGemini] = useState<GeminiStatus | null>(null);
-  const [apiKey, setApiKey] = useState("");
-  const [savingKey, setSavingKey] = useState(false);
-  const [keyError, setKeyError] = useState<string | null>(null);
 
   useEffect(() => {
-    getIntegrationStatus(true)
+    getIntegrationStatus(false)
       .then((response) => setGemini(response.gemini))
       .catch(() => undefined);
   }, []);
-
-  async function connectGemini() {
-    if (!apiKey.trim()) {
-      setKeyError("Paste a Gemini API key from Google AI Studio.");
-      return;
-    }
-    setSavingKey(true);
-    setKeyError(null);
-    try {
-      const response = await saveGeminiKey(apiKey.trim());
-      setMessage(response.message);
-      setApiKey("");
-      const status = await getIntegrationStatus(true);
-      setGemini(status.gemini);
-    } catch (err) {
-      setKeyError(err instanceof Error ? err.message : "Could not save API key.");
-    } finally {
-      setSavingKey(false);
-    }
-  }
 
   async function reset() {
     if (!window.confirm("Reset all Nova settings, chats, reports, PDF data, and generated audio?")) return;
@@ -79,33 +55,16 @@ export function SettingsPage() {
           <div className="flex items-center justify-between gap-4">
             <div>
               <h3 className="font-semibold">AI service</h3>
-              <p className="muted mt-1 text-sm">Gemini free tier · {gemini?.model ?? "gemini-2.5-flash-lite"}</p>
+              <p className="muted mt-1 text-sm">{gemini?.model ?? "gemini-2.5-flash"}</p>
             </div>
-            {gemini?.configured && gemini.connected !== false ? (
+            {gemini?.configured ? (
               <span className="flex items-center gap-2 text-sm text-emerald-400">
-                <CheckCircle2 size={17} /> Connected
+                <CheckCircle2 size={17} /> Configured
               </span>
             ) : (
-              <span className="text-sm text-amber-400">Needs API key</span>
+              <span className="text-sm text-amber-400">Not configured</span>
             )}
           </div>
-          <label className="muted mt-5 block text-sm" htmlFor="gemini-key">
-            Gemini API key
-          </label>
-          <div className="mt-2 flex flex-col gap-2 sm:flex-row">
-            <Input
-              id="gemini-key"
-              type="password"
-              value={apiKey}
-              onChange={(event) => setApiKey(event.target.value)}
-              placeholder="Paste key from aistudio.google.com/apikey"
-            />
-            <Button disabled={savingKey} onClick={() => void connectGemini()} className="shrink-0 bg-cyan-500/20 text-cyan-50">
-              <KeyRound size={16} />
-              {savingKey ? "Saving…" : "Save key"}
-            </Button>
-          </div>
-          {keyError && <p className="mt-2 text-sm text-red-300">{keyError}</p>}
           {gemini?.connected === false && gemini.message && (
             <p className="mt-2 text-sm text-amber-200">{gemini.message}</p>
           )}
@@ -172,24 +131,6 @@ export function SettingsPage() {
             value={settings.voiceVolume}
             onChange={(event) => void update({ voiceVolume: Number(event.target.value) })}
           />
-        </section>
-
-        <section className="flex items-center justify-between gap-4 border-t border-slate-800 p-5">
-          <div>
-            <h3 className="font-semibold">Wake word</h3>
-            <p className="muted mt-1 text-sm">Listen for “Hey Nova” on the Home screen.</p>
-          </div>
-          <button
-            role="switch"
-            aria-checked={settings.wakeWordEnabled}
-            aria-label="Wake word"
-            onClick={() => void update({ wakeWordEnabled: !settings.wakeWordEnabled })}
-            className={`relative h-7 w-12 shrink-0 rounded-full transition ${settings.wakeWordEnabled ? "bg-cyan-500" : "bg-slate-700"}`}
-          >
-            <span
-              className={`absolute top-1 h-5 w-5 rounded-full bg-white shadow transition ${settings.wakeWordEnabled ? "left-6" : "left-1"}`}
-            />
-          </button>
         </section>
 
         <section className="border-t border-slate-800 p-5">

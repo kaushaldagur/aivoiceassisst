@@ -20,7 +20,7 @@ export function ConnectionBanner({ backendError, gemini }: { backendError?: stri
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
         <span className="flex items-center gap-2">
           <AlertTriangle size={18} />
-          Add your free Gemini API key to start chatting.
+          AI service is not configured on the backend.
         </span>
         <Link className="font-medium underline underline-offset-4" to="/settings">
           Open Settings

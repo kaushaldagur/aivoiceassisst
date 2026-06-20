@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 import { ChatComposer } from "../components/assistant/ChatComposer";
@@ -13,22 +13,14 @@ import { getChatHistory } from "../services/chatApi";
 
 export function ChatPage() {
   const location = useLocation();
-  const greetedRef = useRef(false);
-  const { status, messages, setMessages, error, playAudio, stopAudio, setStatus } = useAssistant();
+  const { status, messages, setMessages, error, playAudio, stopAudio } = useAssistant();
   const { modes, settings } = useSettings();
   const currentMode = modes.find((mode) => mode.id === settings.currentMode);
   const startListening = Boolean((location.state as { startListening?: boolean } | null)?.startListening);
-  const wakeGreeting = Boolean((location.state as { wakeGreeting?: boolean } | null)?.wakeGreeting);
 
   useEffect(() => {
     getChatHistory().then((response) => setMessages(response.messages)).catch(() => undefined);
   }, [setMessages]);
-
-  useEffect(() => {
-    if (!wakeGreeting || greetedRef.current) return;
-    greetedRef.current = true;
-    setStatus("Listening");
-  }, [setStatus, wakeGreeting]);
 
   return (
     <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[1fr_300px]">
@@ -41,12 +33,6 @@ export function ChatPage() {
           </div>
           <StatusIndicator status={status} />
         </div>
-
-        {wakeGreeting && status === "Listening" && (
-          <div className="mt-4 rounded-2xl border border-cyan-500/20 bg-cyan-500/10 px-4 py-3 text-sm text-cyan-100">
-            I&apos;m listening… ask your question.
-          </div>
-        )}
 
         {error && (
           <div className="mt-4 rounded-2xl border border-red-400/20 bg-red-500/10 p-3 text-sm text-red-200">{error}</div>

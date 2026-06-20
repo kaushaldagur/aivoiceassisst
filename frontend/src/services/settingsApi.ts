@@ -15,10 +15,3 @@ export function updateSettings(settings: UserSettings) {
 export function resetApplication() {
   return apiRequest<{ message: string; settings: UserSettings }>("/settings/reset", { method: "POST" });
 }
-
-export function saveGeminiKey(apiKey: string) {
-  return apiRequest<{ message: string; gemini: { connected: boolean; model: string } }>("/settings/gemini", {
-    method: "POST",
-    body: JSON.stringify({ apiKey })
-  });
-}
